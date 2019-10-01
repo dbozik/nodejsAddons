@@ -1,4 +1,6 @@
 const testAddon = require('./build/Release/testaddon.node');
+const {Subject, forkJoin} = require('rxjs');
+const {map} = require('rxjs/operators');
 
 // let start = 0;
 
@@ -19,32 +21,42 @@ console.log('result C++: ', result1);
 
 
 console.time('js');
-sum().then(result2 => {
+sum().subscribe(result2 => {
     console.timeEnd('js');
     console.log('result js: ', result2);
-}).catch(error => console.log(error));
+});
 
 module.exports = testAddon;
 
-async function sumPartial() {
+function sumPartial() {
     let pi = 3.1415926;
     const e = 2.718;
     console.log('sum partial');
 
+    let result = new Subject();
 
-    let result = 0;
-    for (let i = 0; i < 1000000000; i++) {
-        pi += e;
-    }
-    result = await pi;
+    setTimeout(() => {
+        console.log('set timeout');
+        
+        for (let i = 0; i < 1000000000; i++) {
+            pi += e;
+        }
+        console.log('result partial: ', pi);
+        
+        result.next(pi);
+    });
 
-    return result;
+    return result.asObservable();
 }
 
-async function sum() {
-    let result = 0;
-
-    result = await sumPartial() + sumPartial();
-
-    return result;
+function sum() {
+    return forkJoin(sumPartial(), sumPartial()).pipe(
+        map((result) => {
+            console.log('forkjoin');
+            console.log(result);
+            
+            
+            return result[0] + result[1];
+        })
+    );
 }

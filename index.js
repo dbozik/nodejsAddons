@@ -19,9 +19,11 @@ console.log('result C++: ', result1);
 
 
 console.time('js');
-const result2 = sum();
-console.timeEnd('js');
-console.log('result js: ', result2);
+sum().then(result2 => {
+    console.timeEnd('js');
+    console.log('result js: ', result2);
+}).catch(error => console.log(error));
+
 
 
 
@@ -29,19 +31,30 @@ console.log('result js: ', result2);
 module.exports = testAddon;
 
 function sumPartial() {
-    let pi = 3.1415926; 
+    let pi = 3.1415926;
     const e = 2.718;
+    console.log('sum partial');
+    
 
-    for (let i = 0; i < 1000000000; i++) {
-        pi += e;
-    }
+    const result = new Promise((resolve, reject) => {
+        console.log('in sum partial promise');
+        
+        for (let i = 0; i < 1000000000; i++) {
+            pi += e;
+        }
 
-    return pi;
+        resolve(pi);
+    });
+
+    return result;
 }
 
 function sum() {
-    const result1 = sumPartial();
-    const result2 = sumPartial();
+    const result = new Promise((resolve, reject) => {
+        Promise.all([sumPartial(), sumPartial()])
+            .then((results) => resolve(results[0] + results[1]))
+            .catch(error => console.log(error));
+    });
 
-    return result1 + result2;
+    return result;
 }

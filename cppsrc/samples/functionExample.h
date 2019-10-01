@@ -1,7 +1,7 @@
 #include <napi.h>
 
 namespace functionExample {
-  std::string hello();
-  Napi::String HelloWrapped(const Napi::CallbackInfo& info);
+  double sum();
+  Napi::Number SumWrapped(const Napi::CallbackInfo& info);
   Napi::Object Init(Napi::Env env, Napi::Object exports);
 }

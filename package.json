@@ -1,0 +1,21 @@
+{
+  "name": "third",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "gypfile": true,
+  "scripts": {
+    "start": "node index",
+    "build": "node-gyp configure build",
+    "build:old": "node-gyp rebuild",
+    "clean": "node-gyp clean"
+  },
+  "author": "dano bozik",
+  "license": "ISC",
+  "devDependencies": {
+    "node-gyp": "^5.0.4"
+  },
+  "dependencies": {
+    "node-addon-api": "^1.7.1"
+  }
+}

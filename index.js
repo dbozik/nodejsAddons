@@ -24,37 +24,27 @@ sum().then(result2 => {
     console.log('result js: ', result2);
 }).catch(error => console.log(error));
 
-
-
-
-
 module.exports = testAddon;
 
-function sumPartial() {
+async function sumPartial() {
     let pi = 3.1415926;
     const e = 2.718;
     console.log('sum partial');
-    
 
-    const result = new Promise((resolve, reject) => {
-        console.log('in sum partial promise');
-        
-        for (let i = 0; i < 1000000000; i++) {
-            pi += e;
-        }
 
-        resolve(pi);
-    });
+    let result = 0;
+    for (let i = 0; i < 1000000000; i++) {
+        pi += e;
+    }
+    result = await pi;
 
     return result;
 }
 
-function sum() {
-    const result = new Promise((resolve, reject) => {
-        Promise.all([sumPartial(), sumPartial()])
-            .then((results) => resolve(results[0] + results[1]))
-            .catch(error => console.log(error));
-    });
+async function sum() {
+    let result = 0;
+
+    result = await sumPartial() + sumPartial();
 
     return result;
 }
